@@ -1,6 +1,6 @@
 {
   "name": "foect",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple form validation library for React Native.",
   "main": "index.js",
   "scripts": {
