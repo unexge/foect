@@ -4,8 +4,7 @@
   "description": "Simple form validation library for React Native.",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
   "repository": "git+https://github.com/unexge/foect.git",
   "keywords": [
