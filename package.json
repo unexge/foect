@@ -1,6 +1,6 @@
 {
   "name": "foect",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple form validation library for React Native.",
   "main": "lib/index.js",
   "scripts": {
@@ -38,7 +38,10 @@
     "react-native": "*"
   },
   "jest": {
-    "coverageReporters": ["html", "text-summary"],
+    "coverageReporters": [
+      "html",
+      "text-summary"
+    ],
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
