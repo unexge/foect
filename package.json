@@ -2,7 +2,7 @@
   "name": "foect",
   "version": "0.0.2",
   "description": "Simple form validation library for React Native.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "tsc"
   },
@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/unexge/foect#readme",
   "devDependencies": {
+    "@types/react": "^15.0.18",
+    "@types/react-native": "^0.42.9",
     "typescript": "^2.2.1"
   },
   "peerDependencies": {

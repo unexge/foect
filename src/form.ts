@@ -4,7 +4,7 @@ import Control from './control';
 
 interface Props { 
   children: (form: Form) => JSX.Element;
-
+  defaultValue: Model;
   onValidSubmit?: (model: Model) => void;
   onInvalidSubmit?: (errors: FormErrors, model: Model) => void;
 };
@@ -29,12 +29,16 @@ class Form extends Component<Props, State> {
     children: PropTypes.func.isRequired
   };
 
+  static defaultProps = {
+    defaultValue: {}
+  };
+
   constructor(props: Props) {
     super(props);
 
     this.state = { 
       controls: new Map(),
-      value: {}, 
+      value: props.defaultValue, 
       errors: {}, 
       status: {} 
     };
@@ -58,11 +62,19 @@ class Form extends Component<Props, State> {
   }
 
   addControl(name: string, control: Control) {
+    let errors: Errors = null;
+    let status: Status = Status.INIT;
+
+    if (Object.keys(this.state.value).indexOf(name) > -1) {
+      errors = control.runValidation(this.getValue(name));
+      status = errors ? Status.INVALID : Status.VALID;
+    }
+
     this.setState(state => ({
       ...state, 
       controls: new Map([ ...state.controls, [name, control] ]),
-      errors: Object.assign({}, state.errors, { [name]: null }),
-      status: Object.assign({}, state.status, { [name]: Status.INIT })
+      errors: Object.assign({}, state.errors, { [name]: errors }),
+      status: Object.assign({}, state.status, { [name]: status })
     }), this.update);
   }
 
