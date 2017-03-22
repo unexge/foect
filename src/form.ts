@@ -40,7 +40,7 @@ class Form extends Component<Props, State> {
       controls: new Map(),
       value: props.defaultValue, 
       errors: {}, 
-      status: {} 
+      status: {}
     };
 
     this.update = this.update.bind(this);

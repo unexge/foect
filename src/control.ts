@@ -11,8 +11,7 @@ interface Props {
 };
 
 interface State {
-  status: Status;
-  errors: Errors;
+  touched: boolean;
 };
 
 interface Context {
@@ -37,9 +36,11 @@ class Control extends Component<Props, State> {
   constructor(props: Props, context: Context) {
     super(props, context);
 
-    this.state = { status: Status.INIT, errors: null };
+    this.state = { touched: false };
 
     this.onChange = this.onChange.bind(this);
+    this.markAsTouched = this.markAsTouched.bind(this);
+    this.markAsUntouched = this.markAsUntouched.bind(this);
   }
 
   get value(): any { return this.context.form.getValue(this.props.name) || ''; }
@@ -49,6 +50,8 @@ class Control extends Component<Props, State> {
   get isInit() { return Status.INIT === this.status; }
   get isValid() { return Status.VALID === this.status; }
   get isInvalid() { return Status.INVALID === this.status; }
+  get isTouched() { return this.state.touched; }
+  get isUntouched() { return !this.isTouched; }
 
   componentWillMount() {
     this.context.form.addControl(this.props.name, this);    
@@ -61,6 +64,9 @@ class Control extends Component<Props, State> {
   onChange(value: any) {
     this.context.form.setValue(this.props.name, value);
   }
+
+  markAsTouched() { !this.state.touched && this.setState({ touched: true }); }
+  markAsUntouched() { this.state.touched && this.setState({ touched: false }); }
 
   runValidation(value: any): Errors {
     return Object

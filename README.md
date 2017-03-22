@@ -29,9 +29,10 @@ Example
             <label htmlFor="password">Password</label>
             <input 
               id="password" type="password" placeholder="Password"
-              value={control.value} onChange={event => control.onChange(event.target.value)} />
+              onBlur={control.markAsTouched} value={control.value} 
+              onChange={event => control.onChange(event.target.value)} />
 
-            { control.isInvalid && 
+            { control.isInvalid && control.isTouched &&
               <span>
                 { control.errors.pattern ?
                   <span>Please provide a strong password.</span> : 
