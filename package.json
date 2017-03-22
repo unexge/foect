@@ -4,7 +4,8 @@
   "description": "Simple form validation library for React Native.",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "repository": "git+https://github.com/unexge/foect.git",
   "keywords": [
@@ -20,12 +21,32 @@
   },
   "homepage": "https://github.com/unexge/foect#readme",
   "devDependencies": {
+    "@types/enzyme": "^2.7.6",
+    "@types/jest": "^19.2.2",
     "@types/react": "^15.0.18",
     "@types/react-native": "^0.42.9",
+    "enzyme": "^2.7.1",
+    "jest": "^19.0.2",
+    "react": "^15.4.2",
+    "react-addons-test-utils": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "ts-jest": "^19.0.2",
     "typescript": "^2.2.1"
   },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
+  },
+  "jest": {
+    "coverageReporters": ["html", "text-summary"],
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
   }
 }

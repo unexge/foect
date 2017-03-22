@@ -20,8 +20,6 @@ interface Context {
 
 export default
 class Control extends Component<Props, State> {
-  props: Props;
-  state: State;
   context: Context;
 
   static contextTypes = {

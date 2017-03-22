@@ -4,7 +4,7 @@ import Control from './control';
 
 interface Props { 
   children: (form: Form) => JSX.Element;
-  defaultValue: Model;
+  defaultValue?: Model;
   onValidSubmit?: (model: Model) => void;
   onInvalidSubmit?: (errors: FormErrors, model: Model) => void;
 };
@@ -18,15 +18,15 @@ interface State {
 
 export default
 class Form extends Component<Props, State> {
-  props: Props;
-  state: State;
-
   static childContextTypes = {
     form: PropTypes.object
   };
 
   static propTypes = {
-    children: PropTypes.func.isRequired
+    children: PropTypes.func.isRequired,
+    defaultValue: PropTypes.object,
+    onValidSubmit: PropTypes.func,
+    onInvalidSubmit: PropTypes.func,
   };
 
   static defaultProps = {
@@ -38,7 +38,7 @@ class Form extends Component<Props, State> {
 
     this.state = { 
       controls: new Map(),
-      value: props.defaultValue, 
+      value: (props.defaultValue as Model), 
       errors: {}, 
       status: {}
     };

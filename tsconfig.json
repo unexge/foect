@@ -8,7 +8,7 @@
         "strictNullChecks": true,
         "noUnusedParameters": true,
         "noUnusedLocals": true,
-        "jsx": "react-native"
+        "jsx": "react"
     },
     "include": [
         "./src/**/*"
