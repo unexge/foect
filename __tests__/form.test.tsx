@@ -242,3 +242,131 @@ test('triggers invalid submit callback', () => {
   expect(submitCbMock.mock.calls[0][0].foo.required)
     .toBeTruthy();
 });
+
+test('validate init controls on submit', () => {
+  const validSubmitCbMock = jest.fn();
+  const invalidSubmitCbMock = jest.fn();
+
+  const wrapper = mount(
+    <Form onInvalidSubmit={validSubmitCbMock} onInvalidSubmit={invalidSubmitCbMock}>
+      { _ => (
+        <Control name="foo" required>{ _ => null }</Control>
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+  instance.submit();
+
+  expect(instance.getStatus('foo'))
+    .toBe(Status.INVALID);
+  
+  expect(validSubmitCbMock.mock.calls)
+    .toHaveLength(0);
+  
+  expect(invalidSubmitCbMock.mock.calls)
+    .toHaveLength(1);
+});
+
+test('setting errors manually', () => {
+  const wrapper = mount(
+    <Form defaultValue={{ foo: 'bar' }}>
+      { _ => (
+        <Control name="foo" required>
+          { control => (
+            <span className="status">
+              { control.isInvalid && 
+                control.errors.notUnique && 'not unique' }
+            </span>
+          ) }
+        </Control>
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+
+  expect(instance.getStatus('foo'))
+    .toBe(Status.VALID);
+
+  expect(wrapper.find('.status').text())
+    .toBe('');
+
+  instance.setErrors('foo', { notUnique: true });
+
+  expect(instance.getStatus('foo'))
+    .toBe(Status.INVALID);
+
+  expect(instance.getErrors('foo'))
+    .toEqual({
+      notUnique: true
+    });
+
+  expect(wrapper.find('.status').text())
+    .toBe('not unique');
+});
+
+test('dynamic controls', () => {
+  const wrapper = mount(
+    <Form defaultValue={{ foo: 'bar' }}>
+      { form => (
+        <span>
+          <Control name="foo" required>{ _ => null }</Control>
+
+          { form.state.dynamicControls && 
+            form.state.dynamicControls.map(c => 
+              <Control key={c.name} name={c.name} required>
+                { _ => null }
+              </Control>
+            ) }
+        </span>
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+
+  expect(instance.status)
+    .toBe(Status.VALID);
+  
+  wrapper.setState({
+    dynamicControls: [
+      { name: 'qux' }
+    ]
+  });
+
+  expect(instance.status)
+    .toBe(Status.INVALID);
+
+  expect(instance.getStatus('qux'))
+    .toBe(Status.INIT);
+});
+
+test('dynamic validation rules', () => {
+  const wrapper = mount(
+    <Form defaultValue={{ foo: 'bar' }}>
+      { form => (
+        <Control name="foo" required { ...(form.state.dynamicRules) }>
+          { _ => null }
+        </Control>
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+
+  expect(instance.status)
+    .toBe(Status.VALID);
+  
+  wrapper.setState({
+    dynamicRules: { minLength: 6 }
+  });
+
+  expect(instance.status)
+    .toBe(Status.INVALID);
+
+  expect(instance.getErrors('foo'))
+    .toEqual({
+      minLength: true
+    });
+});

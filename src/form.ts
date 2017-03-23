@@ -53,7 +53,6 @@ class Form extends Component<Props, State> {
       ? Status.INVALID : Status.VALID; 
   }
   get errors(): FormErrors { return this.state.errors; }
-  get isInit() { return Status.INIT === this.status; }
   get isValid() { return Status.VALID === this.status; }
   get isInvalid() { return Status.INVALID === this.status; }
 

@@ -3,6 +3,26 @@ import { Status, Errors, Validator } from './type';
 import Form from './form';
 import Validators from './validators';
 
+function isValidationRulesChanged(
+  currentProps: Props, 
+  nextProps: Props
+): boolean {
+  const oldRules = Object.keys(currentProps).filter(Validators.has);
+  const newRules = Object.keys(nextProps).filter(Validators.has);
+
+  if (oldRules.length !== newRules.length) {    
+    return true;
+  }
+
+  for (const rule of oldRules) {
+    if (currentProps[rule] !== nextProps[rule]) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 interface Props {
   name: string;
   children: (control: Control) => JSX.Element;
@@ -53,6 +73,12 @@ class Control extends Component<Props, State> {
 
   componentWillMount() {
     this.context.form.addControl(this.props.name, this);    
+  }
+  
+  componentDidUpdate(prevProps: Props) {
+    if (isValidationRulesChanged(prevProps, this.props)) {
+      this.context.form.validateControl(this.props.name);
+    }
   }
 
   componentWillUnmount() {
