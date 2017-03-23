@@ -5,7 +5,7 @@ import Control from '../src/control';
 import { Status } from '../src/type';
 
 test('renders child', () => {
-  const wrapper = shallow(
+  const wrapper = mount(
     <Form>
       { _ => <Control name="foo">{ _ => null }</Control> }
     </Form>
