@@ -132,6 +132,18 @@ type Validator = (value: any, config?: any, control?: Control) => ValidatorResul
 type ValidatorResult = null | Errors;
 ```
 
+### Props
+#### Form
+* `children: Function` child renderer function.
+* `defaultValue?: Model` default values for form.
+* `onValidSubmit?: (model: Model)` callback called on valid submit.
+* `onInvalidSubmit?: (errors: FormErrors, model: Model)` callback called on invalid submit.
+
+#### Control
+* `children: Function` child renderer function.
+* `name: Function` control name.
+* `[validator: string]: any;` validation rules for control.
+
 ### APIs
 #### Form
 * `status: Status` form status.
