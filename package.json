@@ -3,7 +3,9 @@
   "version": "0.0.4",
   "description": "Simple form validation library for React Native.",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
+    "prepublish": "npm run build",
     "build": "tsc",
     "test": "jest"
   },

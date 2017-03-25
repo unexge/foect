@@ -23,18 +23,18 @@ function isValidationRulesChanged(
   return false;
 }
 
-interface Props {
+export interface Props {
   name: string;
   children: (control: Control) => JSX.Element;
 
   [validator: string]: any;
 };
 
-interface State {
+export interface State {
   touched: boolean;
 };
 
-interface Context {
+export interface Context {
   form: Form
 };
 

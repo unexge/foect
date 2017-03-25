@@ -2,14 +2,14 @@ import { Component, PropTypes } from 'react';
 import { FormErrors, Errors, Model, Status } from './type';
 import Control from './control';
 
-interface Props { 
+export interface Props { 
   children: (form: Form) => JSX.Element;
   defaultValue?: Model;
   onValidSubmit?: (model: Model) => void;
   onInvalidSubmit?: (errors: FormErrors, model: Model) => void;
 };
 
-interface State {
+export interface State {
   value: Model;
   controls: Map<string, Control>;
   errors: FormErrors;
@@ -59,7 +59,7 @@ class Form extends Component<Props, State> {
   get isInvalid() { return Status.INVALID === this.status; }
   get isSubmitted() { return this.state.submitted; }
 
-  getChildContext() {
+  getChildContext(): { form: Form } {
     return { form: this };
   }
 
