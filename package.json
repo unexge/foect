@@ -50,6 +50,7 @@
       "ts",
       "tsx",
       "js"
-    ]
+    ],
+    "testResultsProcessor": "<rootDir>/node_modules/ts-jest/coverageprocessor.js"
   }
 }
