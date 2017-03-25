@@ -1,4 +1,6 @@
-[WIP] Foect
+[WIP] Foect 
+[![Build Status](https://travis-ci.org/unexge/foect.svg?branch=master)](https://travis-ci.org/unexge/foect)
+[![npm version](https://badge.fury.io/js/foect.svg)](https://badge.fury.io/js/foect)
 ----
 Simple form validation library for React Native.
 
