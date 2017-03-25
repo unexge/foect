@@ -1,6 +1,7 @@
 import { Component, PropTypes } from 'react';
 import { FormErrors, Errors, Model, Status } from './type';
 import Control from './control';
+import { hasError } from './utils';
 
 export interface Props { 
   children: (form: Form) => JSX.Element;
@@ -56,7 +57,7 @@ class Form extends Component<Props, State> {
   }
   get errors(): FormErrors { return this.state.errors; }
   get isValid() { return Status.VALID === this.status; }
-  get isInvalid() { return Status.INVALID === this.status; }
+  get isInvalid() { return !this.isValid; }
   get isSubmitted() { return this.state.submitted; }
 
   getChildContext(): { form: Form } {
@@ -64,12 +65,12 @@ class Form extends Component<Props, State> {
   }
 
   addControl(name: string, control: Control) {
-    let errors: Errors = null;
+    let errors: Errors = {};
     let status: Status = Status.INIT;
 
     if (Object.keys(this.state.value).indexOf(name) > -1) {
       errors = control.runValidation(this.getValue(name));
-      status = errors ? Status.INVALID : Status.VALID;
+      status = hasError(errors) ? Status.INVALID : Status.VALID;
     }
 
     this.setState(state => ({
@@ -107,7 +108,7 @@ class Form extends Component<Props, State> {
   }
 
   setErrors(name: string, errors: Errors) {
-    const status = errors ? Status.INVALID : Status.VALID;
+    const status = hasError(errors) ? Status.INVALID : Status.VALID;
 
     this.setState(state => ({
       ...state, 
@@ -128,7 +129,7 @@ class Form extends Component<Props, State> {
   }
 
   getErrors(name: string): Errors {
-    return this.state.errors[name];
+    return this.state.errors[name] || {};
   }
 
   update() {
@@ -159,7 +160,7 @@ class Form extends Component<Props, State> {
       for (const name of needsToValidate) {
         const control = this.state.controls.get(name) as Control;
         const errors = control.runValidation(this.getValue(name));
-        const status = errors ? Status.INVALID : Status.VALID;
+        const status = hasError(errors) ? Status.INVALID : Status.VALID;
 
         newState.errors[name] = errors;
         newState.status[name] = status;

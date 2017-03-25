@@ -72,7 +72,7 @@ test('defaults for control', () => {
     .toBeFalsy();
 
   expect(instance.getErrors('foo'))
-    .toBeNull();
+    .toEqual({});
 
   expect(instance.getStatus('foo'))
     .toBe(Status.INIT);
@@ -125,7 +125,7 @@ test('update control value', () => {
     .toBe('bar');
 
   expect(instance.getErrors('foo'))
-    .toBeNull();
+    .toEqual({});
 
   expect(instance.getStatus('foo'))
     .toBe(Status.VALID);
@@ -149,7 +149,7 @@ test('validates default value', () => {
     .toBeFalsy();
 
   expect(instance.getErrors('foo'))
-    .toBeNull();
+    .toEqual({});
 
   expect(instance.getErrors('bar').minLength)
     .toBeTruthy();
@@ -200,7 +200,10 @@ test('updates validation on change', () => {
     <Form>
       { _ => (
         <Control name="foo" required minLength={5}>{ control => (
-          <input type="text" value={control.value} onChange={event => control.onChange(event.target.value)}/>
+          <input 
+            type="text" value={control.value} 
+            onChange={event => control.onChange(event.target.value)}
+          />
         ) }
         </Control> 
       ) }
@@ -225,7 +228,7 @@ test('updates validation on change', () => {
   wrapper.find('input').simulate('change', { target: { value: 'barbaz' } });
 
   expect(instance.getErrors('foo'))
-    .toBeNull();
+    .toEqual({});
 
   expect(instance.isValid)
     .toBeTruthy();
@@ -247,8 +250,10 @@ test('triggers valid submit callback', () => {
   expect(submitCbMock.mock.calls)
     .toHaveLength(1);
 
-  expect(submitCbMock.mock.calls[0][0].foo)
-    .toBe('bar');
+  expect(submitCbMock.mock.calls[0][0])
+    .toEqual({
+      foo: 'bar'
+    });
 });
 
 test('triggers invalid submit callback', () => {
@@ -267,8 +272,10 @@ test('triggers invalid submit callback', () => {
   expect(submitCbMock.mock.calls)
     .toHaveLength(1);
 
-  expect(submitCbMock.mock.calls[0][0].foo.required)
-    .toBeTruthy();
+  expect(submitCbMock.mock.calls[0][0])
+    .toEqual({
+      foo: { required: true }
+    });
 });
 
 test('validate init controls on submit', () => {
@@ -412,7 +419,7 @@ test('dynamic validation rules', () => {
     .toBe(Status.VALID);
 
   expect(instance.getErrors('foo'))
-    .toBeNull();
+    .toEqual({});
 });
 
 test('submitted state', () => {
@@ -474,7 +481,7 @@ test('equalToControl validator', () => {
   expect(instance.errors)
     .toEqual({
       bar: { equalToControl: true },
-      foo: null
+      foo: {}
     });
 
   wrapper.find(Control).last()
@@ -482,8 +489,8 @@ test('equalToControl validator', () => {
 
   expect(instance.errors)
     .toEqual({
-      bar: null,
-      foo: null
+      bar: {},
+      foo: {}
     });
 });
 
@@ -510,7 +517,7 @@ test('custom validators', () => {
   instance.setValue('foo', 'qux');
 
   expect(instance.getErrors('foo'))
-    .toBeNull();
+    .toEqual({});
 
   Validators.delete('notEqual');
 });

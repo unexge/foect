@@ -95,7 +95,7 @@ test('run validation', () => {
     .toEqual({ email: true });
 
   expect(instance.runValidation('foo@bar.com'))
-    .toBeNull();
+    .toEqual({});
 });
 
 test('update value', () => {
@@ -138,7 +138,6 @@ test('state values', () => {
               <span className="value">{control.value}</span>
               <span className="status">{control.status}</span>
               <span className="errors">{JSON.stringify(control.errors)}</span>
-              <span className="isInit">{JSON.stringify(control.isInit)}</span>
               <span className="isValid">{JSON.stringify(control.isValid)}</span>
               <span className="isInvalid">{JSON.stringify(control.isInvalid)}</span>
             </span>
@@ -155,16 +154,13 @@ test('state values', () => {
     .toBe(Status.INIT);
 
   expect(wrapper.find('.errors').text())
-    .toBe('null');
-
-  expect(wrapper.find('.isInit').text())
-    .toBe('true');
+    .toBe('{}');
 
   expect(wrapper.find('.isValid').text())
     .toBe('false');
 
   expect(wrapper.find('.isInvalid').text())
-    .toBe('false');
+    .toBe('true');
 
   wrapper.find('input').simulate('change', { target: { value: 'foo' } });
 
@@ -186,10 +182,7 @@ test('state values', () => {
     .toBe(Status.VALID);
 
   expect(wrapper.find('.errors').text())
-    .toBe('null');
-
-  expect(wrapper.find('.isInit').text())
-    .toBe('false');
+    .toBe('{}');
 
   expect(wrapper.find('.isValid').text())
     .toBe('true');

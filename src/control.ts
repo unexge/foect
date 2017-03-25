@@ -65,9 +65,8 @@ class Control extends Component<Props, State> {
   get form(): Form { return this.context.form; }
   get status(): Status { return this.context.form.getStatus(this.props.name); }
   get errors(): Errors { return this.context.form.getErrors(this.props.name); }
-  get isInit() { return Status.INIT === this.status; }
   get isValid() { return Status.VALID === this.status; }
-  get isInvalid() { return Status.INVALID === this.status; }
+  get isInvalid() { return !this.isValid; }
   get isTouched() { return this.state.touched; }
   get isUntouched() { return !this.isTouched; }
 
@@ -99,14 +98,12 @@ class Control extends Component<Props, State> {
       .reduce((errors, v) => {
         const error = (Validators.get(v) as Validator)(value, this.props[v], this);
 
-        if (null !== error && null !== errors) {
+        if (null !== error) {
           Object.assign(errors, error);
-        } else if (null !== error) {
-          errors = (error as any);
         }
 
         return errors;
-      }, null);
+      }, {});
   }
 
   render() {
