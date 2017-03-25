@@ -132,9 +132,8 @@ class Form extends Component<Props, State> {
   }
 
   update() {
-    // TODO: is this necessary?
     this.state.controls.forEach(c => c.forceUpdate());
-
+    
     this.forceUpdate();
   }
 

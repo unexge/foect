@@ -57,3 +57,22 @@ test('email', () => {
   expect(Validators.get('email')('john@doe.com'))
     .toBeNull();
 });
+
+test('equalToControl', () => {
+  const mockControl = {
+    get form() { 
+      return { 
+        getValue() { return 'bar'; } 
+      } 
+    }
+  };
+
+  expect(Validators.get('equalToControl')(null, 'foo', mockControl as any))
+    .toBeNull();
+
+  expect(Validators.get('equalToControl')('baz', 'foo', mockControl as any))
+    .toEqual({ equalToControl: true });
+
+  expect(Validators.get('equalToControl')('bar', 'foo', mockControl as any))
+    .toBeNull();
+});

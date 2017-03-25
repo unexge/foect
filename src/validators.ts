@@ -1,3 +1,4 @@
+import Control from './control';
 import { Validator } from './type';
 
 const validators = new Map<string, Validator>();
@@ -51,6 +52,14 @@ validators.set('email', (val: any) => {
   }
 
   return EMAIL_REGEXP.test(val) ? null : { email: true };
+});
+
+validators.set('equalToControl', (val: any, controlName: string, control: Control) => {
+  if (isEmpty(val)) {
+    return null;
+  }
+
+  return val === control.form.getValue(controlName) ? null : { equalToControl: true };
 });
 
 export default {

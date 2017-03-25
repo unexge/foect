@@ -394,3 +394,51 @@ test('submitted state', () => {
   expect(wrapper.find('.status').text())
     .toBe('submitted');
 });
+
+test('equalToControl validator', () => {
+  const wrapper = mount(
+    <Form>
+      { _ => (
+        <span>
+          <Control name="foo" required minLength={5}>
+            { control => (
+              <input 
+                type="text" value={control.value} 
+                onChange={event => control.onChange(event.target.value)}
+              />
+            ) }
+          </Control> 
+
+          <Control name="bar" required equalToControl="foo">
+            { control => (
+              <input 
+                type="text" value={control.value} 
+                onChange={event => control.onChange(event.target.value)}
+              />
+            ) }
+          </Control> 
+        </span>
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+
+  instance.setValue('foo', 'foobar');
+  instance.setValue('bar', 'qux');
+
+  expect(instance.errors)
+    .toEqual({
+      bar: { equalToControl: true },
+      foo: null
+    });
+
+  wrapper.find(Control).last()
+    .simulate('change', { target: { value: 'foobar' } });
+
+  expect(instance.errors)
+    .toEqual({
+      bar: null,
+      foo: null
+    });
+});
