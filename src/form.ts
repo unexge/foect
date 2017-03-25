@@ -14,6 +14,7 @@ interface State {
   controls: Map<string, Control>;
   errors: FormErrors;
   status: { [name: string]: Status };
+  submitted: boolean;
 };
 
 export default
@@ -40,7 +41,8 @@ class Form extends Component<Props, State> {
       controls: new Map(),
       value: (props.defaultValue as Model), 
       errors: {}, 
-      status: {}
+      status: {},
+      submitted: false
     };
 
     this.update = this.update.bind(this);
@@ -55,6 +57,7 @@ class Form extends Component<Props, State> {
   get errors(): FormErrors { return this.state.errors; }
   get isValid() { return Status.VALID === this.status; }
   get isInvalid() { return Status.INVALID === this.status; }
+  get isSubmitted() { return this.state.submitted; }
 
   getChildContext() {
     return { form: this };
@@ -168,13 +171,18 @@ class Form extends Component<Props, State> {
   }
 
   handleSubmit() {
-    if (Object.keys(this.state.status).some(n => Status.VALID !== this.state.status[n])) {
-      this.onInvalidSubmit();
+    this.setState(state => ({
+      ...state,
+      submitted: true
+    }), () => {
+      if (Object.keys(this.state.status).some(n => Status.VALID !== this.state.status[n])) {
+        this.onInvalidSubmit();
 
-      return;
-    }
+        return;
+      }
 
-    this.onValidSubmit();
+      this.onValidSubmit();
+    });
   }
 
   onInvalidSubmit() {

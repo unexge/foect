@@ -370,3 +370,27 @@ test('dynamic validation rules', () => {
       minLength: true
     });
 });
+
+test('submitted state', () => {
+  const wrapper = mount(
+    <Form>
+      { form => (
+        <span>
+          <Control name="foo" required>{ _ => null }</Control>
+
+          <span className="status">{ form.isSubmitted ? 'submitted' : 'not submitted' }</span>
+        </span>
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+
+  expect(wrapper.find('.status').text())
+    .toBe('not submitted');
+
+  instance.submit();
+
+  expect(wrapper.find('.status').text())
+    .toBe('submitted');
+});
