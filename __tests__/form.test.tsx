@@ -2,6 +2,7 @@ const React = require('react');
 import { shallow, mount } from 'enzyme';
 import Form from '../src/form';
 import Control from '../src/control';
+import Validators from '../src/validators';
 import { Status } from '../src/type';
 
 test('renders child', () => {
@@ -29,6 +30,33 @@ test('default value', () => {
 
   expect(instance.isValid)
     .toBeTruthy();
+});
+
+test('form state', () => {
+  const wrapper = mount(
+    <Form>
+      { form => (
+        <span>
+          <Control name="foo" required>{ _ => null }</Control>
+
+          <span className="status">
+            { form.isValid ? 'valid' : null }
+            { form.isInvalid ? 'invalid' : null }
+          </span>
+        </span>
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+
+  expect(wrapper.find('.status').text())
+    .toBe('invalid');
+
+  instance.setValue('foo', 'bar');
+
+  expect(wrapper.find('.status').text())
+    .toBe('valid');
 });
 
 test('defaults for control', () => {
@@ -250,7 +278,10 @@ test('validate init controls on submit', () => {
   const wrapper = mount(
     <Form onInvalidSubmit={validSubmitCbMock} onInvalidSubmit={invalidSubmitCbMock}>
       { _ => (
-        <Control name="foo" required>{ _ => null }</Control>
+        <span>
+          <Control name="foo" required>{ _ => null }</Control>
+          <Control name="bar">{ _ => null }</Control>
+        </span>
       ) }
     </Form>
   );
@@ -260,6 +291,9 @@ test('validate init controls on submit', () => {
 
   expect(instance.getStatus('foo'))
     .toBe(Status.INVALID);
+
+  expect(instance.getStatus('bar'))
+    .toBe(Status.VALID);
   
   expect(validSubmitCbMock.mock.calls)
     .toHaveLength(0);
@@ -369,6 +403,16 @@ test('dynamic validation rules', () => {
     .toEqual({
       minLength: true
     });
+
+  wrapper.setState({
+    dynamicRules: { minLength: 3 }
+  });
+
+  expect(instance.status)
+    .toBe(Status.VALID);
+
+  expect(instance.getErrors('foo'))
+    .toBeNull();
 });
 
 test('submitted state', () => {
@@ -441,4 +485,32 @@ test('equalToControl validator', () => {
       bar: null,
       foo: null
     });
+});
+
+test('custom validators', () => {
+  Validators.add('notEqual', (val: any, to: any) => val !== to ? null : { notEqual: true });
+
+  const wrapper = mount(
+    <Form defaultValue={{ foo: 'bar' }}>
+      { _ => (
+        <Control name="foo" required notEqual="bar">
+          { _ => null }
+        </Control> 
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+
+  expect(instance.getErrors('foo'))
+    .toEqual({
+      notEqual: true
+    });
+  
+  instance.setValue('foo', 'qux');
+
+  expect(instance.getErrors('foo'))
+    .toBeNull();
+
+  Validators.delete('notEqual');
 });

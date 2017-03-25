@@ -51,7 +51,8 @@ test('touched state', () => {
                 onTouchStart={control.markAsUntouched} 
               />
               <span className="status">
-                { control.isTouched ? 'touched' : 'untouched' }
+                { control.isTouched ? 'touched' : null }
+                { control.isUntouched ? 'untouched' : null }
               </span>
             </span>
           ) }

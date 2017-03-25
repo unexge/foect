@@ -15,10 +15,6 @@ validators.set('required', (val: any) => {
     return { required: true };
   }
 
-  if (!val) {
-    return { required: true };
-  }
-
   return null;
 });
 
