@@ -76,7 +76,7 @@ import Foect from 'foect';
               <View>
                 { control.errors.pattern ?
                   <Text style={{ color: 'red' }}>Please provide a strong password.</Text> : 
-                  <Text style={{ color: 'red' }}>Please enter your name.</Text> }
+                  <Text style={{ color: 'red' }}>Please enter your password.</Text> }
               </View> }
           </View>
         ) }
@@ -134,14 +134,14 @@ type ValidatorResult = null | Errors;
 
 ### Props
 #### Form
-* `children: Function` child renderer function.
+* `children: (form: Form) => Element` child renderer function.
 * `defaultValue?: Model` default values for form.
-* `onValidSubmit?: (model: Model)` callback called on valid submit.
-* `onInvalidSubmit?: (errors: FormErrors, model: Model)` callback called on invalid submit.
+* `onValidSubmit?: (model: Model) => void` callback called on valid submit.
+* `onInvalidSubmit?: (errors: FormErrors, model: Model) => void` callback called on invalid submit.
 
 #### Control
-* `children: Function` child renderer function.
-* `name: Function` control name.
+* `children: (control: Control) => Element` child renderer function.
+* `name: string` control name.
 * `[validator: string]: any;` validation rules for control.
 
 ### APIs
@@ -152,16 +152,16 @@ type ValidatorResult = null | Errors;
 * `isInvalid: boolean` is form invalid.
 * `isSubmitted: boolean` is form submitted.
 
-* `addControl(name: string, control: Control)` adds a new control to form.
-* `removeControl(name: string)` removes a control from form.
-* `getValue(name: string)` returns value of a control.
-* `setValue(name: string, value: any)` sets value for a control.
+* `addControl(name: string, control: Control): void` adds a new control to form.
+* `removeControl(name: string): void` removes a control from form.
+* `getValue(name: string): any` returns value of a control.
+* `setValue(name: string, value: any): void` sets value for a control.
 * `getErrors(name: string): Status` returns errors of a control.
-* `setErrors(name: string, errors: Errors)` sets errors for a control.
-* `validateControl(name: string)` validates a control and updates control state, errors.
+* `setErrors(name: string, errors: Errors): void` sets errors for a control.
+* `validateControl(name: string): void` validates a control and updates control state, errors.
 * `getStatus(name: string): Status` returns status of a control.
-* `update()` force updates form and all child controls.
-* `submit()` submits the form. calls `onInvalidSubmit` or `onValidSubmit` callback if provided.
+* `update(): void` force updates form and all child controls.
+* `submit(): void` submits the form. calls `onInvalidSubmit` or `onValidSubmit` callback if provided.
 
 #### Control
 * `value: any` control value.
@@ -173,9 +173,9 @@ type ValidatorResult = null | Errors;
 * `isTouched: boolean` is control touched.
 * `isUntouched: boolean` is control untouched.
 
-* `onChange(value: any)` updates control's value.
-* `markAsTouched()` marks control as touched.
-* `markAsUntouched()` marks control as untouched.
+* `onChange(value: any): void` updates control's value.
+* `markAsTouched(): void` marks control as touched.
+* `markAsUntouched(): void` marks control as untouched.
 * `runValidation(value: any): Errors` runs validation with a value and returns errors.
 
 #### Validators
@@ -211,10 +211,10 @@ Foect.Validators.add('equalToControl', (val: any, controlName: string, control: 
 }))
 ```
 
-* `Foect.Validators.add(validatorName: string, fn: Validator)` adds a new validator.
+* `Foect.Validators.add(validatorName: string, fn: Validator): void` adds a new validator.
 * `Foect.Validators.get(validatorName: string): Validator` returns a validator.
 * `Foect.Validators.has(validatorName: string): boolean` returns whether a validator exists.
-* `Foect.Validators.delete(validatorName: string)` deletes a validator.
+* `Foect.Validators.delete(validatorName: string): void` deletes a validator.
 
 ----
 Inspired by [Angular Forms](https://github.com/angular/angular/tree/master/packages/forms).
