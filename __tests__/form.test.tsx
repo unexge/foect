@@ -521,3 +521,52 @@ test('custom validators', () => {
 
   Validators.delete('notEqual');
 });
+
+test('remove control value from model', () => {
+  const wrapper = mount(
+    <Form>
+      { form => (
+        <span>
+          { (form.state.dynamicControls || []).map((id) => (
+            <Control key={id} name={`dynamicControls.${id}`}>{ control => (
+              <input id={id} onChange={event => control.onChange(event.target.value)} />
+            ) }</Control>
+          )) }
+        </span>
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+
+  wrapper.setState({
+    dynamicControls: [
+      'control-1',
+      'control-2',
+      'control-3',
+    ]
+  });
+
+  wrapper.find('#control-1').simulate('change', { target: { value: 'Control #1' } });
+  wrapper.find('#control-2').simulate('change', { target: { value: 'Control #2' } });
+  wrapper.find('#control-3').simulate('change', { target: { value: 'Control #3' } });
+
+  expect(instance.state.value)
+    .toEqual({
+      'dynamicControls.control-1': 'Control #1',
+      'dynamicControls.control-2': 'Control #2',
+      'dynamicControls.control-3': 'Control #3',
+    });
+
+  // remove Control #2.
+  wrapper.setState(state => ({
+    ...state,
+    dynamicControls: state.dynamicControls.filter(id => 'control-2' !== id)
+  }));
+
+  expect(instance.state.value)
+    .toEqual({
+      'dynamicControls.control-1': 'Control #1',
+      'dynamicControls.control-3': 'Control #3',
+    });
+});

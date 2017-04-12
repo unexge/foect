@@ -86,12 +86,14 @@ class Form extends Component<Props, State> {
       const controls = new Map([ ...state.controls ]);
       const errors = Object.assign({}, state.errors);
       const status = Object.assign({}, state.status);
+      const value = Object.assign({}, state.value);      
 
       controls.delete(name);
       delete errors[name];
       delete status[name];
+      delete value[name];
 
-      return { ...state, controls, errors, status };
+      return { ...state, value, controls, errors, status };
     }, this.update);
   }
 
