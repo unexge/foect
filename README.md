@@ -136,6 +136,7 @@ type ValidatorResult = null | Errors;
 #### Form
 * `children: (form: Form) => Element` child renderer function.
 * `defaultValue?: Model` default values for form.
+* `onChange?: (model: Model) => void` callback called on value change.
 * `onValidSubmit?: (model: Model) => void` callback called on valid submit.
 * `onInvalidSubmit?: (errors: FormErrors, model: Model) => void` callback called on invalid submit.
 
@@ -208,7 +209,7 @@ Foect.Validators.add('equalToControl', (val: any, controlName: string, control: 
   }
 
   return val === control.form.getValue(controlName) ? null : { equalToControl: true };
-}))
+})
 ```
 
 * `Foect.Validators.add(validatorName: string, fn: Validator): void` adds a new validator.

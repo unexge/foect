@@ -6,6 +6,7 @@ import { hasError } from './utils';
 export interface Props { 
   children: (form: Form) => JSX.Element;
   defaultValue?: Model;
+  onChange?: (model: Model) => void;
   onValidSubmit?: (model: Model) => void;
   onInvalidSubmit?: (errors: FormErrors, model: Model) => void;
 };
@@ -94,7 +95,10 @@ class Form extends Component<Props, State> {
       delete value[name];
 
       return { ...state, value, controls, errors, status };
-    }, this.update);
+    }, () => {
+      this.onChange();
+      this.update();
+    });
   }
 
   getValue(name: string): any {
@@ -104,7 +108,8 @@ class Form extends Component<Props, State> {
   setValue(name: string, value: any) {
     this.setState(state => ({ 
       ...state, value: Object.assign({}, state.value, { [name]: value }) 
-    }), () => { 
+    }), () => {
+      this.onChange();
       this.validateControl(name); 
     });
   }
@@ -177,7 +182,7 @@ class Form extends Component<Props, State> {
       ...state,
       submitted: true
     }), () => {
-      if (Object.keys(this.state.status).some(n => Status.VALID !== this.state.status[n])) {
+      if (this.isInvalid) {
         this.onInvalidSubmit();
 
         return;
@@ -185,6 +190,12 @@ class Form extends Component<Props, State> {
 
       this.onValidSubmit();
     });
+  }
+
+  onChange() {
+    if ('function' === typeof this.props.onChange) {
+      this.props.onChange(this.state.value);
+    }
   }
 
   onInvalidSubmit() {

@@ -570,3 +570,57 @@ test('remove control value from model', () => {
       'dynamicControls.control-3': 'Control #3',
     });
 });
+
+test('onChange callback', () => {
+  const onChangeMock = jest.fn();
+
+  const wrapper = mount(
+    <Form defaultValue={{ bar: 'qux' }} onChange={onChangeMock}>
+      { _ => (
+        <span>
+          <Control name="foo">
+            { control => (
+              <input 
+                type="text" value={control.value} 
+                onChange={event => control.onChange(event.target.value)}
+              />
+            ) }
+          </Control> 
+
+          <Control name="bar">
+            { control => (
+              <input 
+                type="text" value={control.value} 
+                onChange={event => control.onChange(event.target.value)}
+              />
+            ) }
+          </Control> 
+        </span>
+      ) }
+    </Form>
+  );
+
+  const form = wrapper.instance() as Form;
+
+  wrapper.find('input').first()
+    .simulate('change', { target: { value: 'foobar' } });
+
+  expect(onChangeMock.mock.calls[0])
+    .toBeTruthy();
+
+  expect(onChangeMock.mock.calls[0][0])
+    .toEqual({
+      foo: 'foobar',
+      bar: 'qux'
+    });
+
+  form.removeControl('foo');
+
+  expect(onChangeMock.mock.calls[1])
+    .toBeTruthy();
+
+  expect(onChangeMock.mock.calls[1][0])
+    .toEqual({
+      bar: 'qux'
+    });
+});
