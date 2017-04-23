@@ -624,3 +624,38 @@ test('onChange callback', () => {
       bar: 'qux'
     });
 });
+
+test('callback validator', () => {
+  const wrapper = mount(
+    <Form>
+      { _ => (
+        <span>
+          <Control name="foo" callback={(value: string) => value !== 'qux'}>
+            { control => (
+              <input 
+                type="text" value={control.value} 
+                onChange={event => control.onChange(event.target.value)}
+              />
+            ) }
+          </Control> 
+        </span>
+      ) }
+    </Form>
+  );
+
+  const instance = wrapper.instance() as Form;
+
+  instance.setValue('foo', 'foobar');
+
+  expect(instance.errors)
+    .toEqual({
+      foo: {},
+    });
+
+  instance.setValue('foo', 'qux');
+
+  expect(instance.errors)
+    .toEqual({
+      foo: { callback: true },
+    });
+});

@@ -190,6 +190,7 @@ type ValidatorResult = null | Errors;
 | pattern          | `pattern: RegExp` |
 | email            | - |
 | equalToControl   | `controlName: string` |
+| callback         | `(value: any, control: Control) => boolean` |
 
 Options are passed via props
 ```jsx

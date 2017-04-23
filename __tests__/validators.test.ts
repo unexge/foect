@@ -76,3 +76,19 @@ test('equalToControl', () => {
   expect(Validators.get('equalToControl')('bar', 'foo', mockControl as any))
     .toBeNull();
 });
+
+test('callback', () => {
+  const mockControl = {
+    get form() { 
+      return { 
+        getValue() { return 'bar'; } 
+      } 
+    }
+  };
+
+  expect(Validators.get('callback')('bar', (value: any) => value !== 'bar', mockControl as any))
+    .toEqual({ callback: true });
+
+  expect(Validators.get('callback')('baz', (value: any) => value !== 'bar', mockControl as any))
+    .toBeNull();
+});

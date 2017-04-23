@@ -15,7 +15,7 @@ function isValidationRulesChanged(
   }
 
   for (const rule of oldRules) {
-    if (currentProps[rule] !== nextProps[rule]) {
+    if ('function' !== typeof currentProps[rule] && currentProps[rule] !== nextProps[rule]) {
       return true;
     }
   }

@@ -58,6 +58,14 @@ validators.set('equalToControl', (val: any, controlName: string, control: Contro
   return val === control.form.getValue(controlName) ? null : { equalToControl: true };
 });
 
+validators.set('callback', (val: any, fn: (value: any, control: Control) => boolean, control: Control) => {
+  if (isEmpty(val)) {
+    return null;
+  }
+
+  return fn(val, control) ? null : { callback: true };
+});
+
 export default {
   delete(v: string) { return validators.delete(v); },
   add(v: string, fn: Validator) { return validators.set(v, fn); },
