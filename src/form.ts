@@ -3,7 +3,7 @@ import { FormErrors, Errors, Model, Status } from './type';
 import Control from './control';
 import { hasError } from './utils';
 
-export interface Props { 
+export interface Props {
   children: (form: Form) => JSX.Element;
   defaultValue?: Model;
   onChange?: (model: Model) => void;
@@ -21,6 +21,8 @@ export interface State {
 
 export default
 class Form extends Component<Props, State> {
+  mounted = false;
+
   static childContextTypes = {
     form: PropTypes.object
   };
@@ -39,10 +41,10 @@ class Form extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = { 
+    this.state = {
       controls: new Map(),
-      value: (props.defaultValue as Model), 
-      errors: {}, 
+      value: (props.defaultValue as Model),
+      errors: {},
       status: {},
       submitted: false
     };
@@ -50,11 +52,19 @@ class Form extends Component<Props, State> {
     this.update = this.update.bind(this);
   }
 
-  get status(): Status { 
+  componentWillMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  get status(): Status {
     return Object
       .keys(this.state.status)
       .some(n => Status.VALID !== this.state.status[n])
-      ? Status.INVALID : Status.VALID; 
+      ? Status.INVALID : Status.VALID;
   }
   get errors(): FormErrors { return this.state.errors; }
   get isValid() { return Status.VALID === this.status; }
@@ -66,6 +76,10 @@ class Form extends Component<Props, State> {
   }
 
   addControl(name: string, control: Control) {
+    if (!this.mounted) {
+      return;
+    }
+
     let errors: Errors = {};
     let status: Status = Status.INIT;
 
@@ -75,7 +89,7 @@ class Form extends Component<Props, State> {
     }
 
     this.setState(state => ({
-      ...state, 
+      ...state,
       controls: new Map([ ...state.controls, [name, control] ]),
       errors: Object.assign({}, state.errors, { [name]: errors }),
       status: Object.assign({}, state.status, { [name]: status })
@@ -83,11 +97,15 @@ class Form extends Component<Props, State> {
   }
 
   removeControl(name: string) {
+    if (!this.mounted) {
+      return;
+    }
+
     this.setState(state => {
       const controls = new Map([ ...state.controls ]);
       const errors = Object.assign({}, state.errors);
       const status = Object.assign({}, state.status);
-      const value = Object.assign({}, state.value);      
+      const value = Object.assign({}, state.value);
 
       controls.delete(name);
       delete errors[name];
@@ -106,11 +124,11 @@ class Form extends Component<Props, State> {
   }
 
   setValue(name: string, value: any) {
-    this.setState(state => ({ 
-      ...state, value: Object.assign({}, state.value, { [name]: value }) 
+    this.setState(state => ({
+      ...state, value: Object.assign({}, state.value, { [name]: value })
     }), () => {
       this.onChange();
-      this.validateControl(name); 
+      this.validateControl(name);
     });
   }
 
@@ -118,7 +136,7 @@ class Form extends Component<Props, State> {
     const status = hasError(errors) ? Status.INVALID : Status.VALID;
 
     this.setState(state => ({
-      ...state, 
+      ...state,
       errors: Object.assign({}, state.errors, { [name]: errors }),
       status: Object.assign({}, state.status, { [name]: status })
     }), this.update);
@@ -141,7 +159,7 @@ class Form extends Component<Props, State> {
 
   update() {
     this.state.controls.forEach(c => c.forceUpdate());
-    
+
     this.forceUpdate();
   }
 
