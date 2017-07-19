@@ -1,21 +1,22 @@
 import { PropTypes, Component } from 'react';
+import { isEqual } from 'lodash';
 import { Status, Errors, Validator } from './type';
 import Form from './form';
 import Validators from './validators';
 
 function isValidationRulesChanged(
-  currentProps: Props, 
+  currentProps: Props,
   nextProps: Props
 ): boolean {
   const oldRules = Object.keys(currentProps).filter(Validators.has);
   const newRules = Object.keys(nextProps).filter(Validators.has);
 
-  if (oldRules.length !== newRules.length) {    
+  if (oldRules.length !== newRules.length) {
     return true;
   }
 
   for (const rule of oldRules) {
-    if ('function' !== typeof currentProps[rule] && currentProps[rule] !== nextProps[rule]) {
+    if ('function' !== typeof currentProps[rule] && !isEqual(currentProps[rule], nextProps[rule])) {
       return true;
     }
   }
@@ -71,9 +72,9 @@ class Control extends Component<Props, State> {
   get isUntouched() { return !this.isTouched; }
 
   componentWillMount() {
-    this.context.form.addControl(this.props.name, this);    
+    this.context.form.addControl(this.props.name, this);
   }
-  
+
   componentDidUpdate(prevProps: Props) {
     if (isValidationRulesChanged(prevProps, this.props)) {
       this.context.form.validateControl(this.props.name);
