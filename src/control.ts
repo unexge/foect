@@ -1,5 +1,5 @@
 import { PropTypes, Component } from 'react';
-import { isEqual } from 'lodash';
+import * as isEqual from 'lodash.isequal';
 import { Status, Errors, Validator } from './type';
 import Form from './form';
 import Validators from './validators';
