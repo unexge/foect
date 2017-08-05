@@ -1,8 +1,12 @@
 import { PropTypes, Component } from 'react';
-import * as isEqual from 'lodash.isequal';
 import { Status, Errors, Validator } from './type';
 import Form from './form';
 import Validators from './validators';
+
+// We have to use `require`
+// Visit the link below for more information
+// https://stackoverflow.com/a/39415662
+const isEqual = require('lodash.isequal');
 
 function isValidationRulesChanged(
   currentProps: Props,
