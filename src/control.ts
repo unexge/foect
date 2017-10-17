@@ -1,4 +1,5 @@
-import { PropTypes, Component } from 'react';
+import { Component } from 'react';
+import * as PropTypes from 'prop-types';
 import { Status, Errors, Validator } from './type';
 import Form from './form';
 import Validators from './validators';

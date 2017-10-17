@@ -1,4 +1,5 @@
-import { Component, PropTypes } from 'react';
+import { Component } from 'react';
+import * as PropTypes from 'prop-types';
 import { FormErrors, Errors, Model, Status } from './type';
 import Control from './control';
 import { hasError } from './utils';
