@@ -32,6 +32,7 @@ function isValidationRulesChanged(
 export interface Props {
   name: string;
   children: (control: Control) => JSX.Element;
+  defaultValue: any;
 
   [validator: string]: any;
 };
@@ -54,7 +55,12 @@ class Control extends Component<Props, State> {
 
   static propTypes = {
     name: PropTypes.string.isRequired,
-    children: PropTypes.func.isRequired
+    children: PropTypes.func.isRequired,
+    defaultValue: PropTypes.any,
+  };
+
+  static defaultProps = {
+    defaultValue: ''
   };
 
   constructor(props: Props, context: Context) {
@@ -67,7 +73,7 @@ class Control extends Component<Props, State> {
     this.markAsUntouched = this.markAsUntouched.bind(this);
   }
 
-  get value(): any { return this.context.form.getValue(this.props.name) || ''; }
+  get value(): any { return this.context.form.getValue(this.props.name) || this.props.defaultValue; }
   get form(): Form { return this.context.form; }
   get status(): Status { return this.context.form.getStatus(this.props.name); }
   get errors(): Errors { return this.context.form.getErrors(this.props.name); }
